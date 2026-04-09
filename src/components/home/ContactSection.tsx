@@ -1,13 +1,86 @@
+'use client';
+
+import { useState } from 'react';
+
 export default function ContactSection() {
+  const [form, setForm] = useState({
+    nombre: '',
+    correo: '',
+    mensaje: '',
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [estadoMensaje, setEstadoMensaje] = useState<{
+    tipo: 'success' | 'error' | '';
+    texto: string;
+  }>({
+    tipo: '',
+    texto: '',
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setEstadoMensaje({ tipo: '', texto: '' });
+
+    try {
+      const res = await fetch('https://nova-academia-backend.onrender.com/contacto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (res.ok) {
+        setEstadoMensaje({
+          tipo: 'success',
+          texto: 'Mensaje enviado correctamente 🚀',
+        });
+
+        setForm({
+          nombre: '',
+          correo: '',
+          mensaje: '',
+        });
+      } else {
+        const errorData = await res.json().catch(() => null);
+
+        setEstadoMensaje({
+          tipo: 'error',
+          texto:
+            errorData?.message?.[0] ||
+            errorData?.message ||
+            'Error al enviar el mensaje.',
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      setEstadoMensaje({
+        tipo: 'error',
+        texto: 'Error de conexión con el servidor.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section
       id="contacto"
       className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24"
     >
       <div className="space-y-8">
-        {/* BLOQUE PRINCIPAL */}
         <div className="grid gap-8 rounded-[2rem] bg-[#d9c6b0]/35 p-6 md:grid-cols-2 md:gap-10 md:p-12 animate-slideUp">
-          {/* TEXTO */}
           <div className="animate-slideUp">
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#C9895B] sm:text-sm animate-fadeIn">
               Contacto
@@ -38,8 +111,8 @@ export default function ContactSection() {
             </div>
           </div>
 
-          {/* FORMULARIO */}
           <form
+            onSubmit={handleSubmit}
             className="space-y-4 animate-slideUp animate-delay-2"
             aria-label="Formulario de contacto"
           >
@@ -56,6 +129,9 @@ export default function ContactSection() {
                 type="text"
                 autoComplete="name"
                 placeholder="Ingresa tu nombre completo"
+                value={form.nombre}
+                onChange={handleChange}
+                required
                 className="w-full rounded-xl border border-[#c9b49b] bg-white px-4 py-3 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/20"
               />
             </div>
@@ -73,6 +149,9 @@ export default function ContactSection() {
                 type="email"
                 autoComplete="email"
                 placeholder="Ingresa tu correo electrónico"
+                value={form.correo}
+                onChange={handleChange}
+                required
                 className="w-full rounded-xl border border-[#c9b49b] bg-white px-4 py-3 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/20"
               />
             </div>
@@ -89,20 +168,35 @@ export default function ContactSection() {
                 name="mensaje"
                 rows={5}
                 placeholder="Escribe tu mensaje"
+                value={form.mensaje}
+                onChange={handleChange}
+                required
                 className="w-full rounded-xl border border-[#c9b49b] bg-white px-4 py-3 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/20"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-full bg-[#1E3A5F] px-6 py-3 font-semibold text-white hover-scale focus:outline-none focus:ring-2 focus:ring-[#1E3A5F] sm:w-auto"
+              disabled={loading}
+              className="w-full rounded-full bg-[#1E3A5F] px-6 py-3 font-semibold text-white hover-scale focus:outline-none focus:ring-2 focus:ring-[#1E3A5F] disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
             >
-              Enviar mensaje
+              {loading ? 'Enviando...' : 'Enviar mensaje'}
             </button>
+
+            {estadoMensaje.texto && (
+              <p
+                className={`text-sm font-medium ${
+                  estadoMensaje.tipo === 'success'
+                    ? 'text-green-700'
+                    : 'text-red-600'
+                }`}
+              >
+                {estadoMensaje.texto}
+              </p>
+            )}
           </form>
         </div>
 
-        {/* MAPA */}
         <div className="overflow-hidden rounded-[2rem] border border-[#d8c7b4] shadow-md animate-slideUp animate-delay-3">
           <iframe
             title="Ubicación de Nova Academia en Cuenca, Ecuador"
