@@ -1,38 +1,76 @@
+'use client';
+
+import Image from "next/image";
+import { motion } from "framer-motion";
 import { testimonials } from "@/data/testimonials";
 
 export default function TestimonialsSection() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
-      
       {/* HEADER */}
-      <div className="mb-12 max-w-2xl md:mb-14 animate-slideUp">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#C9895B] sm:text-sm animate-fadeIn">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        viewport={{ once: true }}
+        className="mb-12 max-w-2xl md:mb-14"
+      >
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          viewport={{ once: true }}
+          className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#C9895B] sm:text-sm"
+        >
           Testimonios
-        </p>
+        </motion.p>
 
-        <h2 className="mb-6 text-3xl font-bold leading-tight text-[#1E3A5F] sm:text-4xl md:text-5xl animate-slideUp animate-delay-1">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          viewport={{ once: true }}
+          className="mb-6 text-3xl font-bold leading-tight text-[#1E3A5F] sm:text-4xl md:text-5xl"
+        >
           Historias que reflejan nuestra experiencia educativa
-        </h2>
+        </motion.h2>
 
-        <p className="text-base leading-8 text-[#355070] sm:text-lg animate-slideUp animate-delay-2">
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          viewport={{ once: true }}
+          className="text-base leading-8 text-[#355070] sm:text-lg"
+        >
           Conoce algunas opiniones de estudiantes, familias y exalumnos que han
           sido parte de nuestra comunidad.
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
 
       {/* CARDS */}
       <div className="grid gap-6 md:grid-cols-3 md:gap-8">
         {testimonials.map((item, index) => (
-          <article
+          <motion.article
             key={item.name}
-            className={`rounded-[2rem] bg-white p-6 shadow-md md:p-8 hover-scale animate-slideUp ${
-              index === 0
-                ? "animate-delay-1"
-                : index === 1
-                ? "animate-delay-2"
-                : "animate-delay-3"
-            }`}
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.2 }}
+            viewport={{ once: true }}
+            whileHover={{ scale: 1.03 }}
+            className="rounded-[2rem] bg-white p-6 shadow-md md:p-8 text-center"
           >
+            <div className="mb-5 flex justify-center">
+              <div className="relative h-20 w-20 overflow-hidden rounded-full ring-4 ring-[#C9895B]/15">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  sizes="80px"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+
             <p className="mb-6 leading-8 text-[#355070]">
               “{item.text}”
             </p>
@@ -46,10 +84,9 @@ export default function TestimonialsSection() {
                 {item.role}
               </p>
             </div>
-          </article>
+          </motion.article>
         ))}
       </div>
-
     </section>
   );
 }

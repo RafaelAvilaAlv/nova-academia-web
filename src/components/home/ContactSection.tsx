@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function ContactSection() {
   const [form, setForm] = useState({
@@ -33,13 +34,16 @@ export default function ContactSection() {
     setEstadoMensaje({ tipo: '', texto: '' });
 
     try {
-      const res = await fetch('https://nova-academia-backend.onrender.com/contacto', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const res = await fetch(
+        'https://nova-academia-backend.onrender.com/contacto',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(form),
         },
-        body: JSON.stringify(form),
-      });
+      );
 
       if (res.ok) {
         setEstadoMensaje({
@@ -80,22 +84,34 @@ export default function ContactSection() {
       className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24"
     >
       <div className="space-y-8">
-        <div className="grid gap-8 rounded-[2rem] bg-[#d9c6b0]/35 p-6 md:grid-cols-2 md:gap-10 md:p-12 animate-slideUp">
-          <div className="animate-slideUp">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#C9895B] sm:text-sm animate-fadeIn">
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="grid gap-8 rounded-[2rem] bg-[#d9c6b0]/35 p-6 md:grid-cols-2 md:gap-10 md:p-12"
+        >
+          <div>
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#C9895B] sm:text-sm">
               Contacto
             </p>
 
-            <h2 className="mb-6 text-3xl font-bold leading-tight text-[#1E3A5F] sm:text-4xl md:text-5xl animate-slideUp animate-delay-1">
+            <motion.h2
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="mb-6 text-3xl font-bold leading-tight text-[#1E3A5F] sm:text-4xl md:text-5xl"
+            >
               Estamos para ayudarte
-            </h2>
+            </motion.h2>
 
-            <p className="mb-6 text-base leading-8 text-[#355070] sm:text-lg animate-slideUp animate-delay-2">
+            <p className="mb-6 text-base leading-8 text-[#355070] sm:text-lg">
               Si deseas más información sobre nuestra oferta académica, proceso
               de admisión o servicios institucionales, contáctanos.
             </p>
 
-            <div className="space-y-3 text-[#355070] animate-slideUp animate-delay-3">
+            <div className="space-y-3 text-[#355070]">
               <p>
                 <strong>Dirección:</strong> Cuenca, Ecuador
               </p>
@@ -111,10 +127,14 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <form
+          <motion.form
             onSubmit={handleSubmit}
-            className="space-y-4 animate-slideUp animate-delay-2"
             aria-label="Formulario de contacto"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="space-y-4"
           >
             <div>
               <label
@@ -175,13 +195,15 @@ export default function ContactSection() {
               />
             </div>
 
-            <button
+            <motion.button
               type="submit"
               disabled={loading}
-              className="w-full rounded-full bg-[#1E3A5F] px-6 py-3 font-semibold text-white hover-scale focus:outline-none focus:ring-2 focus:ring-[#1E3A5F] disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="w-full rounded-full bg-[#1E3A5F] px-6 py-3 font-semibold text-white focus:outline-none focus:ring-2 focus:ring-[#1E3A5F] disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
             >
               {loading ? 'Enviando...' : 'Enviar mensaje'}
-            </button>
+            </motion.button>
 
             {estadoMensaje.texto && (
               <p
@@ -194,10 +216,16 @@ export default function ContactSection() {
                 {estadoMensaje.texto}
               </p>
             )}
-          </form>
-        </div>
+          </motion.form>
+        </motion.div>
 
-        <div className="overflow-hidden rounded-[2rem] border border-[#d8c7b4] shadow-md animate-slideUp animate-delay-3">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="overflow-hidden rounded-[2rem] border border-[#d8c7b4] shadow-md"
+        >
           <iframe
             title="Ubicación de Nova Academia en Cuenca, Ecuador"
             src="https://www.google.com/maps?q=Cuenca,Ecuador&z=14&output=embed"
@@ -207,7 +235,7 @@ export default function ContactSection() {
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           />
-        </div>
+        </motion.div>
       </div>
     </section>
   );

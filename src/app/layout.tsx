@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ChatbotWidget from "@/components/layout/ChatbotWidget";
 
 export const metadata: Metadata = {
   title: {
@@ -21,12 +22,12 @@ export const metadata: Metadata = {
   authors: [{ name: "Rafa Alvarez" }],
   creator: "Rafa Alvarez",
   publisher: "Nova Academia",
-  metadataBase: new URL("https://nova-academia.vercel.app"),
+  metadataBase: new URL("https://nova-academia-web.vercel.app"),
   openGraph: {
     title: "Nova Academia | Educación con excelencia",
     description:
       "Conoce la propuesta educativa de Nova Academia: programas académicos, admisiones, noticias y contacto.",
-    url: "https://nova-academia.vercel.app",
+    url: "https://nova-academia-web.vercel.app",
     siteName: "Nova Academia",
     images: [
       {
@@ -59,8 +60,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body>{children}</body>
+    <html lang="es" data-scroll-behavior="smooth">
+      <body>
+        {children}
+        <ChatbotWidget />
+      </body>
     </html>
   );
 }
